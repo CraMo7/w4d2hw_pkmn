@@ -1,0 +1,12 @@
+<div class="content">
+
+<% @trainers.each do |trainer| %>
+
+<a href="/trainers/<%= trainer.id %>"><%= trainer.name %></a><br>
+
+<% end %>
+<br>
+<br>
+<a href="/">Back</a>
+
+</div>

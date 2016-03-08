@@ -1,0 +1,9 @@
+body {
+  background-image: url(https://images7.alphacoders.com/381/381583.jpg);
+  background-size: cover;
+  color: white;
+}
+
+a:visited { 
+    color: white;
+}
