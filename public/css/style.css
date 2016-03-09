@@ -2,8 +2,20 @@ body {
   background-image: url(https://images7.alphacoders.com/381/381583.jpg);
   background-size: cover;
   color: white;
+  /*background-repeat: no-repeat;*/
 }
 
-a:visited { 
-    color: white;
+a { 
+    color: #2C5;
+    text-decoration: none;
+    background-color: #000;
+    border-radius: 1px 10px;
+    max-width: auto;
+
+}
+p {
+  background-color: #000;
+  border-radius: 1px 10px;
+  max-width: 200px;
+  padding: 4px;
 }

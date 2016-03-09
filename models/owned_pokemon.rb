@@ -1,5 +1,5 @@
 require( 'pg' )
-
+require_relative("../db/sql_runner.rb")
 class OwnedPokemon
 
   attr_reader :id, :trainer_id, :pokemon_id
@@ -11,26 +11,26 @@ class OwnedPokemon
   end
 
   def save
-    sql = "INSERT INTO OwnedPokemons (
+    query = "INSERT INTO OwnedPokemons (
       trainer_id,
       pokemon_id) 
       VALUES (
         #{ @trainer_id }, 
         #{ @pokemon_id }
       )"
-    SqlRunner.run_sql( sql )
+    Sql.run( query )
   end
 
   def self.all()
-    sql = "SELECT * FROM OwnedPokemons"
-    owned = SqlRunner.run_sql( sql )
+    query = "SELECT * FROM OwnedPokemons"
+    owned = Sql.run( query )
     result = owned.map { |o| OwnedPokemon.new( o ) }
     return result
   end
 
   def self.delete_all 
-    sql = "DELETE FROM OwnedPokemons"
-    SqlRunner.run_sql(sql)
+    query = "DELETE FROM OwnedPokemons"
+    Sql.run(query)
   end
   
 end

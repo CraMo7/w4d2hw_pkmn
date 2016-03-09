@@ -12,39 +12,34 @@ class Pokemon
   end
 
   def save()
-    sql = "INSERT INTO Pokemons (name) VALUES ('#{ @name }')"
-    SqlRunner.run_sql( sql )
-    return last_entry()
-  end
-
-  def last_entry
-    sql = "SELECT * FROM Pokemons ORDER BY id DESC limit 1;"
-    return Pokemon.map_item(sql)
+    query = "INSERT INTO Pokemons (name) VALUES ('#{ @name }') RETURNING *"
+    result = query.run(query)
+    @id = result[0]["id"]
   end
 
   def trainers()
-    sql = "SELECT t.* FROM Trainers u INNER JOIN OwnedPokemons o ON o.trainer_id = t.id WHERE o.pokemon_id = #{@id};"
-    return Trainer.map_items(sql)
+    query = "SELECT t.* FROM Trainers u INNER JOIN OwnedPokemons o ON o.trainer_id = t.id WHERE o.pokemon_id = #{@id};"
+    return Trainer.map_items(query)
   end
 
   def self.all()
-    sql = "SELECT * FROM Pokemons"
-    return Pokemon.map_items(sql)
+    query = "SELECT * FROM Pokemons"
+    return Pokemon.map_items(query)
   end
 
   def self.delete_all 
-    sql = "DELETE FROM Pokemons"
-    SqlRunner.run_sql(sql)
+    query = "DELETE FROM Pokemons"
+    Sql.run(query)
   end
 
-  def self.map_items(sql)
-    pokemon = SqlRunner.run_sql(sql)
+  def self.map_items(query)
+    pokemon = Sql.run(query)
     result = pokemon.map { |product| Pokemon.new( product ) }
     return result
   end
 
-  def self.map_item(sql)
-    result = Pokemon.map_items(sql)
+  def self.map_item(query)
+    result = Pokemon.map_items(query)
     return result.first
   end
 

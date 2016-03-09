@@ -1,5 +1,5 @@
 <p>Name: <%= @trainer.name %></p>
 <br>
 <p>Pokemons:<br> <% @trainer.pokemon.each do |p| %><%= p.name  %><br><% end %></p>
-
-<a href="/trainers">Back to trainers</a>
+<a href="/owned_pokemon/new"><p>Add a pokemon to this trainer.</p></a>
+<a href="/trainers"><p>Back to trainers</p></a>

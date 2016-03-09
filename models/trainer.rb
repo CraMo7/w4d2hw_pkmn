@@ -5,7 +5,7 @@ require_relative('../db/sql_runner')
 
 class Trainer
 
-  attr_reader( :id, :email,:name )
+  attr_reader( :id, :name )
 
   def initialize( options )
     @id = options['id']
@@ -13,45 +13,41 @@ class Trainer
   end
 
   def save()
-    sql = "INSERT INTO Trainers (name) VALUES ('#{ @name }')"
-    SqlRunner.run_sql( sql )
-    return last_entry()
+    query = "INSERT INTO Trainers (name) VALUES ('#{ @name }') RETURNING *"
+    result = Sql.run(query)
+    @id = result[0]["id"]
   end
 
   def self.find(id)
-   sql = "SELECT * FROM Trainers WHERE id = #{id.to_i}"
-   result = SqlRunner.run_sql( sql )
+   query = "SELECT * FROM Trainers WHERE id = #{id.to_i}"
+   result = Sql.run( query )
    trainer = Trainer.new( result[0] )
   end
 
-  def last_entry
-    sql = "SELECT * FROM Trainers ORDER BY id DESC limit 1;"
-    return Trainer.map_item(sql)
-  end
 
   def pokemon()
-    sql = "SELECT p.* FROM Pokemons p INNER JOIN OwnedPokemons o ON o.pokemon_id = p.id WHERE o.trainer_id = #{@id};"
-    return Pokemon.map_items(sql)
+    query = "SELECT p.* FROM Pokemons p INNER JOIN OwnedPokemons o ON o.pokemon_id = p.id WHERE o.trainer_id = #{@id};"
+    return Pokemon.map_items(query)
   end
 
   def self.all()
-    sql = "SELECT * FROM Trainers"
-    return Trainer.map_items(sql)
+    query = "SELECT * FROM Trainers"
+    return Trainer.map_items(query)
   end
 
   def self.delete_all 
-   sql = "DELETE FROM Trainers"
-   SqlRunner.run_sql(sql)
+   query = "DELETE FROM Trainers"
+   Sql.run(query)
   end
 
-  def self.map_items(sql)
-    trainers = SqlRunner.run_sql( sql )
+  def self.map_items(query)
+    trainers = Sql.run(query)
     result = trainers.map { |t| Trainer.new( t ) }
     return result
   end
 
-  def self.map_item(sql)
-    result = Trainer.map_items(sql)
+  def self.map_item(query)
+    result = Trainer.map_items(query)
     return result.first
   end
 
